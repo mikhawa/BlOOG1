@@ -1,17 +1,21 @@
 <?php
-
 require_once '../../../config.php';
-
-use model\Interface\InterfaceManager;
-
-
 // Autoload classes
 spl_autoload_register(function ($class) {
     $class = str_replace('\\', '/', $class);
     require PROJECT_DIRECTORY.'/' .$class . '.php';
 });
 
-class TestInterface implements InterfaceManager{
+
+require "InterfaceSlugManager.php";
+require "CategoryMapping.php";
+
+use model\Interface\InterfaceManager;
+use model\Trait\TraitSlugify;
+
+
+
+class CategoryManager implements InterfaceManager, InterfaceSlugManager{
 
     protected PDO $connection;
     public function __construct(PDO $pdo)
@@ -19,9 +23,12 @@ class TestInterface implements InterfaceManager{
         $this->connection = $pdo;
     }
 
+    use TraitSlugify;
+
     public function selectAll(): array
     {
-        // TODO: Implement selectAll() method.
+        $stmt = $this->connection->query('SELECT * FROM `category`');
+        return $stmt->fetchAll();
     }
 
     public function selectOneById(int $id): object
@@ -43,8 +50,19 @@ class TestInterface implements InterfaceManager{
     {
         // TODO: Implement delete() method.
     }
+
+    public function selectOneBySlug(string $slug): object
+    {
+        /*
+        $query = $this->connection->prepare('SELECT * FROM `category` WHERE `category_slug` = :slug');
+        $query->execute(['slug' => $slug]);
+        return new CategoryMapping($query->fetch(PDO::FETCH_ASSOC));
+        */
+        return new CategoryMapping(['category_id' => 1, 'category_name' => 'test', 'category_slug' => 'test', 'category_description' => 'test', 'category_parent' => 1]);
+    }
 }
 
-$test = new TestInterface(new PDO(DB_TYPE . ':host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET, DB_LOGIN, DB_PWD));
+$test = new CategoryManager(new PDO(DB_TYPE . ':host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET, DB_LOGIN, DB_PWD));
 
-var_dump($test);
+
+var_dump($test, $test->selectAll(),$test->selectOneBySlug('test'));
