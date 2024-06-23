@@ -33,7 +33,7 @@ $commentManager = new CommentManager($dbConnect);
 if(isset($_GET['view'])&&ctype_digit($_GET['view'])){
     $idComment = (int) $_GET['view'];
     // select one comment
-    $selectOneComment = $commentManager->selectOneById($idComment);
+    $selectOneComment = $commentManager->selectOneByIdWithUser($idComment);
     // view
     require "../view/comment/selectOneComment.view.php";
 

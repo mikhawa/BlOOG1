@@ -5,6 +5,7 @@ namespace model\Manager ;
 use Exception;
 use model\Interface\InterfaceManager;
 use model\Mapping\CommentMapping;
+use model\Mapping\UserMapping;
 use model\OurPDO;
 
 class CommentManager implements InterfaceManager{
@@ -51,7 +52,46 @@ class CommentManager implements InterfaceManager{
         return $arrayComment;
     }
 
-    // récupération d'un commentaire via son id
+    // récupération d'un commentaire via son id avec l'utilisateur
+    public function selectOneByIdWithUser(int $id): null|string|CommentMapping
+    {
+
+        // requête préparée
+        $sql = "SELECT c.*, u.user_id, u.user_full_name FROM `comment` c
+        LEFT JOIN `comment_has_user` h ON h.comment_comment_id = c.comment_id
+        LEFT JOIN `user` u ON u.user_id = h.user_user_id
+         WHERE c.comment_id= ?";
+
+        $prepare = $this->connect->prepare($sql);
+
+        try{
+            $prepare->bindValue(1,$id, OurPDO::PARAM_INT);
+            $prepare->execute();
+
+            // pas de résultat = null
+            if($prepare->rowCount()===0) return null;
+
+            // récupération des valeurs en tableau associatif
+            $result = $prepare->fetch(OurPDO::FETCH_ASSOC);
+
+            // création de l'instance CommentMapping
+            $result1 = new CommentMapping($result);
+            // création de l'instance UserMapping
+            $user = new UserMapping($result);
+            $result1->setUser($user);
+
+            $prepare->closeCursor();
+            
+            return $result1;
+
+
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
+        
+    }
+
+    // récupération d'un commentaire via son id avec les informations de l'utilisateur
     public function selectOneById(int $id): null|string|CommentMapping
     {
 
@@ -73,14 +113,14 @@ class CommentManager implements InterfaceManager{
             $result = new CommentMapping($result);
 
             $prepare->closeCursor();
-            
+
             return $result;
 
 
         }catch(Exception $e){
             return $e->getMessage();
         }
-        
+
     }
 
     // mise à jour d'un commentaire

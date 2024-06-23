@@ -15,6 +15,7 @@ use model\Trait\TraitDateTime;
 use DateTime;
 use Exception;
 
+use model\Mapping\UserMapping;
 
 # classe de mapping de la table comment, étendue de AbstractMapping
 class CommentMapping extends AbstractMapping
@@ -33,6 +34,8 @@ class CommentMapping extends AbstractMapping
     protected null|string|DateTime $comment_date_update=null;
     protected null|string|DateTime $comment_date_publish=null;
     protected ?int $comment_is_published=null;
+
+    protected UserMapping|null $user = null;
 
     // Les getters et setters
 
@@ -112,6 +115,16 @@ class CommentMapping extends AbstractMapping
         $this->comment_is_published = $comment_is_published;
     }
 
+
+    public function getUser(): UserMapping|null
+    {
+        return $this->user;
+    }
+
+    public function setUser(?UserMapping $user): void
+    {
+        $this->user = $user;
+    }
 
 
 
