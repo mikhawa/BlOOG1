@@ -3,6 +3,7 @@
 namespace model\Mapping;
 
 use model\Abstract\AbstractMapping;
+use model\Mapping\userMapping;
 
 class CategoryMapping extends AbstractMapping
 {
@@ -12,6 +13,8 @@ class CategoryMapping extends AbstractMapping
     protected ?string $category_slug;
     protected ?string $category_description;
     protected ?int $category_parent;
+
+    protected array $user = [];
 
 
     public function getCategoryId(): ?int
