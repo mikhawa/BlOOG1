@@ -1,11 +1,11 @@
 Options +FollowSymlinks
 RewriteEngine on
 
-# Si le fichier demandé est un fichier ou un répertoire réel, ne pas réécrire
+# Existing conditions to ensure the request is not for a real file or directory
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
-# Nouvelle règle de réécriture /article/hebergement-mutualise-wikipedia/ to ?route=article&slug=hebergement-mutualise-wikipedia
+# New rule to rewrite /article/hebergement-mutualise-wikipedia/ to ?route=article&slug=hebergement-mutualise-wikipedia
 
 RewriteRule ^article/([a-z0-9-]+)/?$ ./index.php?route=article&slug=$1 [L,QSA]
 

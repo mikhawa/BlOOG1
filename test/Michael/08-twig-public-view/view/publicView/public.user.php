@@ -6,16 +6,15 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="<?=$root?>css/style.css">
-    <title>Bloog 1 | Catégorie | <?=$category->getCategoryName()?></title>
+    <title>Bloog 1 | User | <?=$user->getUserLogin()?></title>
 </head>
 <body>
-    <h1>Bloog 1 | Catégorie | <?=$category->getCategoryName()?></h1>
+    <h1>Bloog 1 | User | <?=$user->getUserLogin()?></h1>
     <?php
     require 'public.menu.php';
     ?>
-    <h2>Description : </h2>
-    <p><?=$category->getCategoryDescription()?> ici</p>
-    <h2>Articles : </h2>
+    <h2>Nom complet : <?=$user->getUserFullName()?></h2>
+    <h2>Articles écrits par <?=$user->getUserFullName()?> : </h2>
     <?php
     if($articles === null):
     ?>
@@ -28,7 +27,7 @@
             <article>
                 <h3><a href="<?=$root?>article/<?= $article->getArticleSlug() ?>"><?= $article->getArticleTitle() ?></a></h3>
                 <p><?= $article->getArticleText() ?> <a href="<?=$root?>article/<?= $article->getArticleSlug() ?>"> ... Lire la suite</a></p>
-                <p>Publié le <?= $article->getArticleDatePublish() ?> par <a href="<?=$root."user/".$article->getUser()->getUserLogin()?>"><?= $article->getUser()->getUserFullName() ?></a></p>
+                <p>Publié le <?= $article->getArticleDatePublish() ?> par <?= $article->getUser()->getUserFullName() ?></p>
                 <p>Categories:
                     <?php
                     if(is_null($article->getCategories())):

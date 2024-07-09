@@ -32,16 +32,20 @@ $twig = new Environment($loader, [
     'debug' => true,
 ]);
 
+try {
 // connexion à la database singleton
-$db = OurPDO::getInstance( DB_TYPE.":host=".DB_HOST.";dbname=".DB_NAME.";port=".DB_PORT.";charset=".DB_CHARSET,
-    DB_LOGIN,
-    DB_PWD);
+    $db = OurPDO::getInstance(DB_TYPE . ":host=" . DB_HOST . ";dbname=" . DB_NAME . ";port=" . DB_PORT . ";charset=" . DB_CHARSET,
+        DB_LOGIN,
+        DB_PWD);
 // résultats en tableau associatif
-$db->setAttribute(OurPDO::ATTR_ERRMODE, OurPDO::ERRMODE_EXCEPTION);
-$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
+    $db->setAttribute(OurPDO::ATTR_ERRMODE, OurPDO::ERRMODE_EXCEPTION);
+    $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+}catch (Exception $e){
+    die($e->getMessage());
+}
 // chemin qui sera utilisé pour les liens absolus dans les vues
-$root = "/test/Michael/07-twig-public-view/public/";
+$root = "/test/Michael/08-twig-public-view/public/";
+
 
 // Appel du router général
 require_once PROJECT_DIRECTORY.'/controller/routerController.php';
